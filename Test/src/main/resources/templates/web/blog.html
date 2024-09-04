@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Roomlist</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/web/css/animate.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/owl.carousel.min.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/owl.theme.default.min.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/magnific-popup.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/aos.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/ionicons.min.css}" />
+    <link rel="stylesheet" th:href="@{/web/css/bootstrap-datepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/jquery.timepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/web/css/icomoon.css}"/>    
+    <link rel="stylesheet" th:href="@{/web/css/style.css}"/>    
+    <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <style>
+      .grid-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Tạo ma trận 2x2 */
+    gap: 10px; /* Khoảng cách giữa các item */
+}
+
+/* Đảm bảo card có chiều dài đồng đều */
+.card {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex: 1; /* Cho phép card-body chiếm dụng mọi không gian còn lại */
+}
+.card-img-top {
+    height: 200px; /* hoặc bất kỳ chiều cao cố định nào bạn muốn */
+    object-fit: cover; /* Đảm bảo ảnh phủ kín không gian này mà không bị méo */
+    width: 100%; /* Đảm bảo ảnh trải đều theo chiều rộng của card */
+}
+.filter-sidebar {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+btn-filter {
+    padding: 10px 20px;
+    background-color: #007bff; /* Màu nền của nút */
+    border: none;
+    border-radius: 5px; /* Bo góc */
+    color: white; /* Màu chữ */
+    font-size: 16px; /* Kích thước chữ */
+    cursor: pointer; /* Hiệu ứng con trỏ khi di chuột qua */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển đổi */
+}
+
+.btn-filter:hover {
+    background-color: #0056b3; /* Màu nền khi hover */
+    color: #fff;
+}
+  </style>
+  </head>
+  <body>    
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="index.html">Phenikaa<span>Resorts</span></a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	          <li class="nav-item active"><a href="trang-chu" class="nav-link">Trang chủ</a></li>
+	          <li class="nav-item"><a href="roomlist" class="nav-link">Phòng</a></li>
+	          <li class="nav-item"><a href="restaurant.html" class="nav-link">Nhà hàng</a></li>
+	          <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Options
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li sec:authorize="isAnonymous()"><a href="/login" class="dropdown-item">Login</a></li>
+                <li sec:authorize="isAnonymous()"><a href="/register" class="dropdown-item">Register</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/logout" class="dropdown-item">Logout</a></li>
+            </ul>            
+            </li>
+          </ul>
+	      </div>
+	    </div>
+	  </nav>
+    <!-- END nav -->
+	<div class="hero-wrap" style="background-image: url('img/bg_3.jpg');">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text d-flex align-itemd-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center d-flex align-items-end justify-content-center">
+          	<div class="text">
+	            <p class="breadcrumbs mb-2"><span class="mr-2"><a href="trang-chu">Trang chủ</a></span> <span>Blog</span></p>
+	            <h1 class="mb-4 bread">Danh sách phòng</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-3">
+                    <!-- Lọc Loại Phòng -->
+                    <div class="form-group">
+                        <label for="room-type">Loại Phòng</label>
+                        <select class="form-control" id="room-type">
+                            <option value="">Chọn loại...</option>
+                            <th:block th:each="category : ${categories.entrySet()}">
+                                <option th:value="${category.key}" th:text="${category.key}"></option>
+                            </th:block>
+                        </select>
+                    </div>                            
+                </div>
+                <div class="col-md-3">
+                    <!-- Lọc Giá -->
+                    <div class="form-group">
+                        <label for="price-range">Khoảng Giá</label>
+                        <input type="text" class="form-control" id="price-range" placeholder="1000000 - 5000000 VNĐ">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <!-- Lọc Số Lượng Người -->
+                    <div class="form-group">
+                        <label for="guests">Số Lượng Người</label>
+                        <select class="form-control" id="guests">
+                            <option value="">Chọn số lượng...</option>
+                            <option value="1">1 Người</option>
+                            <option value="2">2 Người</option>
+                            <option value="3">3 Người</option>
+                            <option value="4">4 Người</option>
+                            <option value="5">5+ Người</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="guests">Hạng phòng</label>
+                        <select class="form-control" id="guests">
+                            <option value="">Chọn hạng phòng...</option>
+                            <th:block th:each="room_type : ${room_type_all.entrySet()}">
+                                <option th:value="${room_type.key}" th:text="${room_type.key}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Nơi hiển thị danh sách phòng sau khi lọc -->
+           <!-- Tiếp tục từ các bộ lọc -->
+            <div class="row justify-content-center mb-5">
+                <!-- Các bộ lọc trước đó -->
+
+                <!-- Nút Lọc -->
+                <div class="col text-center mt-2">
+                    <button type="submit" class="btn btn-primary btn-filter">Lọc</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row">
+                <div th:each="depart : ${all_depart}" class="col-md-4 d-flex align-items-stretch">
+                    <div class="card h-100"> <!-- Thêm class h-100 để card có chiều dài đồng đều -->
+                        <img src="" th:src="${#lists.isEmpty(depart.thumbnail) ? '' : depart.thumbnail[0]}" class="card-img-top img-fluid" alt="...">
+                        <div class="card-body d-flex flex-column"> <!-- Dùng flex để quản lý nội dung bên trong -->
+                            <h5 class="card-title" th:text="${depart.title}">Tiêu đề phòng</h5>
+                            <div class="grid-2x2 mt-auto"> <!-- Class để tạo grid cho thông số -->
+                                <p class="card-text">Sức chứa: <span th:text="${depart.max_person}">X</span></p>
+                                <p class="card-text">Số phòng: <span th:text="${depart.capacity}">X</span></p>
+                                <p class="card-text">Giá: <span th:text="${#numbers.formatDecimal(depart.price, 0, 'COMMA', 2, 'POINT')} + ' VNĐ'">X VNĐ</span></p>
+                                <p class="card-text">Kiểu: <span th:text="${depart.catergory}">X</span></p>
+                            </div>
+                            <div class="card-footer mt-auto"> <!-- mt-auto để đẩy footer xuống dưới cùng -->
+                                <a th:href="@{/can-ho(id=${depart.id})}" class="btn btn-primary">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+
+    <footer class="ftco-footer ftco-section img" style="background-image: url(img/bg_4.jpg);">
+    	<div class="overlay"></div>
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2">Harbor Lights</h2>
+              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4 ml-md-5">
+              <h2 class="ftco-heading-2">Useful Links</h2>
+              <ul class="list-unstyled">
+                <li><a href="#" class="py-2 d-block">Blog</a></li>
+                <li><a href="#" class="py-2 d-block">Rooms</a></li>
+                <li><a href="#" class="py-2 d-block">Amenities</a></li>
+                <li><a href="#" class="py-2 d-block">Gift Card</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+             <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2">Privacy</h2>
+              <ul class="list-unstyled">
+                <li><a href="#" class="py-2 d-block">Career</a></li>
+                <li><a href="#" class="py-2 d-block">About Us</a></li>
+                <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+                <li><a href="#" class="py-2 d-block">Services</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+            	<div class="block-23 mb-3">
+	              <ul>
+	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	              </ul>
+	            </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-center">
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+  <script th:src="@{/web/js/jquery.min.js}"></script>
+  <script th:src="@{/web/js/jquery-migrate-3.0.1.min.js}"></script>
+  <script th:src="@{/web/js/popper.min.js}"></script>
+  <script th:src="@{/web/js/bootstrap.min.js}"></script>
+  <script th:src="@{/web/js/jquery.easing.1.3.js}"></script>
+  <script th:src="@{/web/js/jquery.waypoints.min.js}"></script>
+  <script th:src="@{/web/js/jquery.stellar.min.js}"></script>
+  <script th:src="@{/web/js/owl.carousel.min.js}"></script>
+  <script th:src="@{/web/js/jquery.magnific-popup.min.js}"></script>
+  <script th:src="@{/web/js/aos.js}"></script>
+  <script th:src="@{/web/js/jquery.animateNumber.min.js}"></script>
+  <script th:src="@{/web/js/bootstrap-datepicker.js}"></script>
+  <script th:src="@{/web/js/scrollax.min.js}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=false"></script>
+  <script th:src="@{/web/js/google-map.js}"></script>
+  <script th:src="@{/web/js/main.js}"></script>    
+  </body>
+</html>
